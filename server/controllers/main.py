@@ -1,5 +1,6 @@
 import os 
 import random
+import json
 
 from flask import request
 from flask import Response
@@ -23,7 +24,8 @@ class fileController():
             file = request.files['file']
             filename = secure_filename(file.filename)
             fileId = self.fileRegister(filename)
-            filePath=os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
+            localFileName = '.'.join([fileId, filename.split('.')[-1]])
+            filePath=os.path.join(current_app.config['UPLOAD_FOLDER'], localFileName)
             if os.path.isfile(filePath):
                 pass
             else:
@@ -46,9 +48,10 @@ class fileController():
     
     def fileDownload(self, fileId):
         query = Query()
-        print(fileId)
         fileName = self.db.getFileName(query, fileId)
-        filePath=os.path.join(current_app.config['UPLOAD_FOLDER'], fileName)
-        return send_file(filePath, as_attachment=True)
+        localFileName = '.'.join([fileId, fileName.split('.')[-1]])
+        filePath=os.path.join(current_app.config['UPLOAD_FOLDER'], localFileName)
+        print(filePath)
+        return send_file(filePath, download_name=fileName, as_attachment=True), 200
 
 

@@ -25,7 +25,12 @@ class productionConfig(Config):
 
     @property
     def UPLOAD_FOLDER(self):
-        return os.path.join(self.app.root_path, 'userUploads') 
+        folder = os.path.join(self.app.root_path, 'userUploads')
+        if os.path.isdir(folder):
+            return folder
+        else:
+            os.mkdir(folder)
+            return folder
     DB_NAME = "files" 
     ENV= 'production'
     DEBUG= False

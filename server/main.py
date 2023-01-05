@@ -9,7 +9,9 @@ app = Blueprint("app", __name__)
 def fileUpload():
     return fileController().fileUpload(request)
 
-@app.route("/file/<string:fileId>/")
-def fileDownload(fileId):
+@app.route("/download/")
+def fileDownload():
+    fileId = request.args.get("id", type=str)
+    print(fileId)
     return fileController().fileDownload(fileId)
 
